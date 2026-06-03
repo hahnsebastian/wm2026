@@ -2,6 +2,9 @@ import { PrismaClient } from "../src/generated/prisma/client";
 import { Pool, neonConfig } from '@neondatabase/serverless';
 import { PrismaNeon } from '@prisma/adapter-neon';
 import ws from 'ws';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 neonConfig.webSocketConstructor = ws;
 
