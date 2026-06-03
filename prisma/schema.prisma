@@ -1,0 +1,58 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+model User {
+  id                 String              @id @default(uuid())
+  name               String              @unique
+  pin                String
+  totalPoints        Int                 @default(0)
+  isAdmin            Boolean             @default(false)
+  predictions        Prediction[]
+  historicPointsLogs HistoricPointsLog[]
+}
+
+model Fixture {
+  id                 String              @id @default(uuid())
+  homeTeam           String
+  awayTeam           String
+  kickoffTime        DateTime
+  stage              String
+  homeGoals          Int?
+  awayGoals          Int?
+  isFinished         Boolean             @default(false)
+  predictions        Prediction[]
+  historicPointsLogs HistoricPointsLog[]
+}
+
+model Prediction {
+  id           String  @id @default(uuid())
+  userId       String
+  fixtureId    String
+  homeBet      Int
+  awayBet      Int
+  pointsEarned Int?
+  user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fixture      Fixture @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, fixtureId])
+}
+
+model HistoricPointsLog {
+  id                         String   @id @default(uuid())
+  userId                     String
+  fixtureId                  String
+  cumulativePointsAtThisTime Int
+  timestamp                  DateTime @default(now())
+  user                       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fixture                    Fixture  @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
