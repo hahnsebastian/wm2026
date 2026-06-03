@@ -149,25 +149,31 @@ export default function Home() {
       // 1. Fetch Fixtures
       const fixturesRes = await fetch("/api/fixtures");
       const fixturesData = await fixturesRes.json();
-      setFixtures(fixturesData);
+      if (Array.isArray(fixturesData)) {
+        setFixtures(fixturesData);
 
-      // Prepopulate Admin inputs
-      const initialAdminInputs: Record<string, { home: string; away: string; isFinished: boolean }> = {};
-      fixturesData.forEach((fix: Fixture) => {
-        initialAdminInputs[fix.id] = {
-          home: fix.homeGoals !== null ? fix.homeGoals.toString() : "",
-          away: fix.awayGoals !== null ? fix.awayGoals.toString() : "",
-          isFinished: fix.isFinished,
-        };
-      });
-      setAdminInputs(initialAdminInputs);
+        // Prepopulate Admin inputs
+        const initialAdminInputs: Record<string, { home: string; away: string; isFinished: boolean }> = {};
+        fixturesData.forEach((fix: Fixture) => {
+          initialAdminInputs[fix.id] = {
+            home: fix.homeGoals !== null ? fix.homeGoals.toString() : "",
+            away: fix.awayGoals !== null ? fix.awayGoals.toString() : "",
+            isFinished: fix.isFinished,
+          };
+        });
+        setAdminInputs(initialAdminInputs);
+      } else {
+        console.error("Fixtures data is not an array:", fixturesData);
+      }
 
       // 2. Fetch Leaderboard (standings & progression)
       const leaderboardRes = await fetch("/api/leaderboard");
       const leaderboardData = await leaderboardRes.json();
-      setStandings(leaderboardData.standings);
-      setChartData(leaderboardData.chartData);
-      setUsersList(leaderboardData.usersList);
+      if (leaderboardData && !leaderboardData.error) {
+        setStandings(leaderboardData.standings || []);
+        setChartData(leaderboardData.chartData || []);
+        setUsersList(leaderboardData.usersList || []);
+      }
 
       // 3. Fetch Predictions for active tab
       const isMemberTab = FAMILY_MEMBERS.includes(activeTab);
@@ -184,20 +190,24 @@ export default function Home() {
       const res = await fetch(`/api/predictions?viewer=${encodeURIComponent(viewerName)}`);
       if (res.ok) {
         const predictionsData = await res.json();
-        setPredictions(predictionsData);
+        if (Array.isArray(predictionsData)) {
+          setPredictions(predictionsData);
 
-        // Prepopulate Bet inputs for predictions if we are on a member's tab
-        if (viewerName) {
-          const initialBets: Record<string, { home: string; away: string }> = {};
-          predictionsData.forEach((pred: Prediction) => {
-            if (pred.userName.toLowerCase() === viewerName.toLowerCase()) {
-              initialBets[pred.fixtureId] = {
-                home: pred.homeBet !== null ? pred.homeBet.toString() : "",
-                away: pred.awayBet !== null ? pred.awayBet.toString() : "",
-              };
-            }
-          });
-          setBetInputs(initialBets);
+          // Prepopulate Bet inputs for predictions if we are on a member's tab
+          if (viewerName) {
+            const initialBets: Record<string, { home: string; away: string }> = {};
+            predictionsData.forEach((pred: Prediction) => {
+              if (pred.userName.toLowerCase() === viewerName.toLowerCase()) {
+                initialBets[pred.fixtureId] = {
+                  home: pred.homeBet !== null ? pred.homeBet.toString() : "",
+                  away: pred.awayBet !== null ? pred.awayBet.toString() : "",
+                };
+              }
+            });
+            setBetInputs(initialBets);
+          }
+        } else {
+          console.error("Predictions data is not an array:", predictionsData);
         }
       }
     } catch (error) {
