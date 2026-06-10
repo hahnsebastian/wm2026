@@ -641,15 +641,15 @@ export default function Home() {
                           </div>
 
                           {/* Scores & Inputs */}
-                          <div className="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+                          <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full md:w-auto justify-between md:justify-end mt-4 md:mt-0">
                             {/* Team Matchup */}
-                            <div className="flex items-center gap-3 font-mono text-sm">
-                              <span className="font-bold text-right w-24 md:w-32 truncate">{fix.homeTeam}</span>
+                            <div className="flex items-center gap-2 sm:gap-3 font-mono text-xs sm:text-sm w-full sm:w-auto justify-between sm:justify-start">
+                              <span className="font-bold text-right w-20 sm:w-24 md:w-32 truncate">{fix.homeTeam}</span>
                               
                               {/* Prediction Forms */}
                               {started ? (
                                 // Read-Only Saved Prediction
-                                <div className="flex items-center gap-1 px-3 py-1 border border-border-custom bg-neutral-100 dark:bg-neutral-900 rounded font-bold">
+                                <div className="flex items-center gap-1 px-2 sm:px-3 py-1 border border-border-custom bg-neutral-100 dark:bg-neutral-900 rounded font-bold">
                                   {savedPrediction && savedPrediction.homeBet !== null && savedPrediction.awayBet !== null ? (
                                     <>
                                       <span>{savedPrediction?.homeBet}</span>
@@ -662,7 +662,7 @@ export default function Home() {
                                 </div>
                               ) : (
                                 // Interactive Inputs
-                                <div className="flex items-center gap-1.5">
+                                <div className="flex items-center gap-1 sm:gap-1.5 shrink-0">
                                   <input
                                     type="text"
                                     maxLength={2}
@@ -695,15 +695,15 @@ export default function Home() {
                                 </div>
                               )}
 
-                              <span className="font-bold text-left w-24 md:w-32 truncate">{fix.awayTeam}</span>
+                              <span className="font-bold text-left w-20 sm:w-24 md:w-32 truncate">{fix.awayTeam}</span>
                             </div>
 
                             {/* Actions / points status */}
-                            <div className="w-24 text-right">
+                            <div className="w-full sm:w-24 text-center sm:text-right mt-2 sm:mt-0">
                               {started ? (
                                 // Show points status if match is finished
                                 fix.isFinished ? (
-                                  <div className="text-right">
+                                  <div className="text-center sm:text-right">
                                     <span className="font-mono text-xs font-bold block">
                                       Result: {fix.homeGoals}-{fix.awayGoals}
                                     </span>
@@ -726,7 +726,7 @@ export default function Home() {
                                   type="button"
                                   onClick={() => submitPrediction(fix.id, activeTab)}
                                   disabled={savingStatus === "saving"}
-                                  className={`w-full py-2 px-3 rounded font-mono text-[10px] uppercase font-bold tracking-wider border border-border-custom transition-all ${
+                                  className={`w-full sm:w-auto py-2 px-6 sm:px-3 rounded font-mono text-[10px] uppercase font-bold tracking-wider border border-border-custom transition-all ${
                                     savingStatus === "saved"
                                       ? "bg-emerald-950/20 text-emerald-400 border-emerald-900/30"
                                       : savingStatus === "saving"
