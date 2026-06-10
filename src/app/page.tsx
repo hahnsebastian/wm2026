@@ -59,7 +59,7 @@ interface Prediction {
 
 const FAMILY_MEMBERS = [
   "Yuliya", "Jasmine", "Max", "Omar", "Simone", 
-  "Ursula", "Thomas", "Sebastian", "Zakee", "Leila"
+  "Ursula", "Thomas", "Sebastian", "Zakee", "Laila"
 ];
 
 export default function Home() {
@@ -442,6 +442,26 @@ export default function Home() {
             {/* LEADERBOARD VIEW */}
             {activeTab === "leaderboard" && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Rules Summary */}
+                <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border border-border-custom rounded-lg bg-card text-xs font-mono">
+                  <div className="flex flex-col items-center justify-center p-3 border border-border-custom rounded bg-neutral-50 dark:bg-neutral-900/50">
+                    <span className="font-bold text-emerald-500 text-lg mb-1">4 Points</span>
+                    <span className="text-center text-neutral-500 uppercase">Exact Score Match<br/>(e.g. bet 2-1, result 2-1)</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center p-3 border border-border-custom rounded bg-neutral-50 dark:bg-neutral-900/50">
+                    <span className="font-bold text-emerald-500 text-lg mb-1">2 Points</span>
+                    <span className="text-center text-neutral-500 uppercase">Correct Goal Diff.<br/>(e.g. bet 3-1, result 2-0)</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center p-3 border border-border-custom rounded bg-neutral-50 dark:bg-neutral-900/50">
+                    <span className="font-bold text-emerald-500 text-lg mb-1">1 Point</span>
+                    <span className="text-center text-neutral-500 uppercase">Correct Outcome<br/>(e.g. bet 2-0, result 1-0)</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center p-3 border border-border-custom rounded bg-neutral-50 dark:bg-neutral-900/50">
+                    <span className="font-bold text-red-500 text-lg mb-1">0 Points</span>
+                    <span className="text-center text-neutral-500 uppercase">Wrong Outcome<br/>(e.g. bet 2-1, result 0-1)</span>
+                  </div>
+                </div>
+
                 {/* Standings Table */}
                 <div className="lg:col-span-2 border border-border-custom rounded-lg bg-card overflow-hidden">
                   <div className="px-6 py-4 border-b border-border-custom flex justify-between items-center bg-neutral-50 dark:bg-neutral-900/50">

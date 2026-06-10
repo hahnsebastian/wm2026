@@ -31,7 +31,7 @@ async function main() {
     { name: "Thomas", pin: "7777", isAdmin: false },
     { name: "Sebastian", pin: "8888", isAdmin: false },
     { name: "Zakee", pin: "1234", isAdmin: false },
-    { name: "Leila", pin: "5678", isAdmin: false },
+    { name: "Laila", pin: "5678", isAdmin: false },
   ];
 
   const seededUsers = [];
@@ -40,36 +40,7 @@ async function main() {
     seededUsers.push(user);
   }
 
-  console.log("Seeding fixtures...");
-  // Past friendly fixtures for instant testing
-  const friendly1 = await prisma.fixture.create({
-    data: {
-      homeTeam: "Italy",
-      awayTeam: "Switzerland",
-      kickoffTime: new Date("2026-05-20T18:00:00Z"),
-      stage: "Warmup Friendly",
-    },
-  });
-
-  const friendly2 = await prisma.fixture.create({
-    data: {
-      homeTeam: "Netherlands",
-      awayTeam: "Portugal",
-      kickoffTime: new Date("2026-05-22T20:00:00Z"),
-      stage: "Warmup Friendly",
-    },
-  });
-
-  const friendly3 = await prisma.fixture.create({
-    data: {
-      homeTeam: "Belgium",
-      awayTeam: "Denmark",
-      kickoffTime: new Date("2026-05-24T16:00:00Z"),
-      stage: "Warmup Friendly",
-    },
-  });
-
-    // Future World Cup 2026 fixtures
+  // Future World Cup 2026 fixtures
   const wcFixtures = [
     {
       homeTeam: "Mexico",
@@ -512,8 +483,6 @@ async function main() {
   }
 
   console.log("Seeding predictions...");
-  // Create randomized predictions for all players for the warmup matches so they have something to resolve
-  const pastFixtures = [friendly1, friendly2, friendly3];
   
   // A helper function to generate random bets
   const getRandomScore = () => Math.floor(Math.random() * 4); // 0, 1, 2, or 3
@@ -521,17 +490,6 @@ async function main() {
   for (const user of seededUsers) {
     if (user.isAdmin) continue; // Admin doesn't play
     
-    // Seed predictions for past friendly fixtures
-    for (const fixture of pastFixtures) {
-      await prisma.prediction.create({
-        data: {
-          userId: user.id,
-          fixtureId: fixture.id,
-          homeBet: getRandomScore(),
-          awayBet: getRandomScore(),
-        },
-      });
-    }
 
     // Seed one future prediction for Yuliya & Sebastian to showcase lock icons
     if (user.name === "Yuliya") {
