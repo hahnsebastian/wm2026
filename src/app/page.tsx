@@ -59,7 +59,7 @@ interface Prediction {
 
 const FAMILY_MEMBERS = [
   "Yuliya", "Jasmine", "Max", "Omar", "Simone", 
-  "Ursula", "Thomas", "Sebastian", "Zakee", "Laila"
+  "Ursula", "Thomas", "Sebastian", "Zakee", "Laila", "Mike"
 ];
 
 export default function Home() {

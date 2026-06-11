@@ -32,6 +32,7 @@ async function main() {
     { name: "Sebastian", pin: "8888", isAdmin: false },
     { name: "Zakee", pin: "1234", isAdmin: false },
     { name: "Laila", pin: "5678", isAdmin: false },
+    { name: "Mike", pin: "9876", isAdmin: false },
   ];
 
   const seededUsers = [];
