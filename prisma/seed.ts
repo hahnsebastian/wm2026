@@ -40,7 +40,7 @@ async function main() {
     seededUsers.push(user);
   }
 
-    // Future World Cup 2026 fixtures
+      // Future World Cup 2026 fixtures
   const wcFixtures = [
     {
       homeTeam: "Mexico",
