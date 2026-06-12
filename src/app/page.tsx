@@ -335,10 +335,22 @@ export default function Home() {
     return new Date(isoString) <= new Date();
   };
 
-  const lineColors = [
-    "#ffffff", "#a3a3a3", "#525252", "#737373", "#d4d4d4",
-    "#e5e5e5", "#171717", "#262626", "#404040", "#f5f5f5"
-  ];
+  // One vivid, distinct color per player — easy to read in both light and dark mode
+  const playerColors: Record<string, string> = {
+    Yuliya:    "#f43f5e", // rose
+    Jasmine:   "#f97316", // orange
+    Max:       "#eab308", // yellow
+    Omar:      "#22c55e", // green
+    Simone:    "#06b6d4", // cyan
+    Ursula:    "#818cf8", // indigo
+    Thomas:    "#a78bfa", // violet
+    Sebastian: "#ec4899", // pink
+    Zakee:     "#14b8a6", // teal
+    Laila:     "#fb923c", // amber-orange
+    Mike:      "#60a5fa", // blue
+  };
+  const fallbackColors = ["#f43f5e","#f97316","#eab308","#22c55e","#06b6d4","#818cf8","#a78bfa","#ec4899","#14b8a6","#fb923c","#60a5fa"];
+  const getPlayerColor = (name: string, index: number) => playerColors[name] ?? fallbackColors[index % fallbackColors.length];
 
   return (
     <div className="flex-1 flex flex-col bg-background text-foreground min-h-screen transition-colors duration-200">
@@ -585,9 +597,10 @@ export default function Home() {
                                 key={user}
                                 type="monotone"
                                 dataKey={user}
-                                stroke={lineColors[index % lineColors.length]}
-                                strokeWidth={user === activeTab ? 3 : 1.5}
-                                activeDot={{ r: 6 }}
+                                stroke={getPlayerColor(user, index)}
+                                strokeWidth={user === activeTab ? 3.5 : 2}
+                                strokeOpacity={user === activeTab ? 1 : 0.85}
+                                activeDot={{ r: 6, strokeWidth: 0 }}
                                 dot={false}
                               />
                             ))}
