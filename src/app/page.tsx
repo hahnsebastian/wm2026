@@ -638,6 +638,7 @@ export default function Home() {
                   ) : (
                     fixtures.map((fix) => {
                       const started = isMatchStarted(fix.kickoffTime);
+                      const locked = fix.isFinished;
                       const savedPrediction = predictions.find(
                         (p) => p.userName.toLowerCase() === activeTab.toLowerCase() && p.fixtureId === fix.id
                       );
@@ -649,7 +650,7 @@ export default function Home() {
                         <div 
                           key={fix.id} 
                           className={`p-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6 ${
-                            started ? "bg-neutral-50/30 dark:bg-neutral-950/10" : ""
+                            locked ? "bg-neutral-50/30 dark:bg-neutral-950/10" : ""
                           }`}
                         >
                           {/* Fixture Info */}
@@ -658,9 +659,13 @@ export default function Home() {
                               <span className="text-[10px] font-mono border border-border-custom px-2 py-0.5 rounded uppercase tracking-wider text-neutral-400">
                                 {fix.stage}
                               </span>
-                              {started ? (
+                              {locked ? (
                                 <span className="flex items-center gap-1 text-[10px] font-mono text-red-500 border border-red-900/30 bg-red-950/10 px-1.5 py-0.2 rounded uppercase">
                                   <Lock className="w-3 h-3" /> Locked
+                                </span>
+                              ) : started ? (
+                                <span className="flex items-center gap-1 text-[10px] font-mono text-amber-500 border border-amber-900/30 bg-amber-950/10 px-1.5 py-0.2 rounded uppercase">
+                                  <Unlock className="w-3 h-3" /> Live
                                 </span>
                               ) : (
                                 <span className="flex items-center gap-1 text-[10px] font-mono text-emerald-500 border border-emerald-900/30 bg-emerald-950/10 px-1.5 py-0.2 rounded uppercase">
@@ -680,7 +685,7 @@ export default function Home() {
                               <span className="font-bold text-right w-20 sm:w-24 md:w-32 truncate">{fix.homeTeam}</span>
                               
                               {/* Prediction Forms */}
-                              {started ? (
+                              {locked ? (
                                 // Read-Only Saved Prediction
                                 <div className="flex items-center gap-1 px-2 sm:px-3 py-1 border border-border-custom bg-neutral-100 dark:bg-neutral-900 rounded font-bold">
                                   {savedPrediction && savedPrediction.homeBet !== null && savedPrediction.awayBet !== null ? (
@@ -733,7 +738,7 @@ export default function Home() {
 
                             {/* Actions / points status */}
                             <div className="w-full sm:w-24 text-center sm:text-right mt-2 sm:mt-0">
-                              {started ? (
+                              {locked ? (
                                 // Show points status if match is finished
                                 fix.isFinished ? (
                                   <div className="text-center sm:text-right">
@@ -806,6 +811,7 @@ export default function Home() {
                   ) : (
                     fixtures.map((fix) => {
                       const started = isMatchStarted(fix.kickoffTime);
+                      const locked = fix.isFinished;
                       const isExpanded = !!expandedMatches[fix.id];
                       
                       // Filter predictions for this match
