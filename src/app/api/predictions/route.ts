@@ -11,6 +11,7 @@ export async function GET(request: Request) {
         fixture: {
           select: {
             kickoffTime: true,
+            isFinished: true,
           },
         },
         user: {
@@ -25,9 +26,9 @@ export async function GET(request: Request) {
 
     const sanitizedPredictions = predictions.map((pred) => {
       const isOwnPrediction = pred.user.name.toLowerCase() === viewerName.toLowerCase();
-      const hasStarted = new Date(pred.fixture.kickoffTime) <= now;
+      const isFinished = pred.fixture.isFinished;
 
-      if (isOwnPrediction || hasStarted) {
+      if (isOwnPrediction || isFinished) {
         return {
           id: pred.id,
           userId: pred.userId,
@@ -83,10 +84,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Fixture not found" }, { status: 404 });
     }
 
-    // Verify kickoff time
-    const now = new Date();
-    if (new Date(fixture.kickoffTime) <= now) {
-      return NextResponse.json({ error: "Predictions are locked. This match has already kicked off!" }, { status: 400 });
+    // Verify if match is finished
+    if (fixture.isFinished) {
+      return NextResponse.json({ error: "Predictions are locked. This match has already finished!" }, { status: 400 });
     }
 
     // Upsert the prediction
