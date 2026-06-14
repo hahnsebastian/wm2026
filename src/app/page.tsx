@@ -150,7 +150,14 @@ export default function Home() {
       const fixturesRes = await fetch("/api/fixtures");
       const fixturesData = await fixturesRes.json();
       if (Array.isArray(fixturesData)) {
-        setFixtures(fixturesData);
+        // Sort so that unfinished games come first, then sort by kickoff time
+        const sortedFixtures = fixturesData.sort((a: Fixture, b: Fixture) => {
+          if (a.isFinished === b.isFinished) {
+            return new Date(a.kickoffTime).getTime() - new Date(b.kickoffTime).getTime();
+          }
+          return a.isFinished ? 1 : -1;
+        });
+        setFixtures(sortedFixtures);
 
         // Prepopulate Admin inputs
         const initialAdminInputs: Record<string, { home: string; away: string; isFinished: boolean }> = {};
