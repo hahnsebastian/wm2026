@@ -297,13 +297,13 @@ async function main() {
     },
     {
       homeTeam: "Spain",
-      awayTeam: "Uruguay",
+      awayTeam: "Cape Verde",
       kickoffTime: new Date("2026-06-15T16:00:00.000Z"),
       stage: "Group Stage (Group H)",
     },
     {
       homeTeam: "Saudi Arabia",
-      awayTeam: "Cape Verde",
+      awayTeam: "Uruguay",
       kickoffTime: new Date("2026-06-15T22:00:00.000Z"),
       stage: "Group Stage (Group H)",
     },
@@ -321,12 +321,12 @@ async function main() {
     },
     {
       homeTeam: "Spain",
-      awayTeam: "Cape Verde",
+      awayTeam: "Uruguay",
       kickoffTime: new Date("2026-06-26T17:00:00.000Z"),
       stage: "Group Stage (Group H)",
     },
     {
-      homeTeam: "Uruguay",
+      homeTeam: "Cape Verde",
       awayTeam: "Saudi Arabia",
       kickoffTime: new Date("2026-06-26T17:00:00.000Z"),
       stage: "Group Stage (Group H)",
