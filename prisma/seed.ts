@@ -405,13 +405,13 @@ async function main() {
     },
     {
       homeTeam: "Portugal",
-      awayTeam: "Colombia",
+      awayTeam: "DR Congo",
       kickoffTime: new Date("2026-06-17T17:00:00.000Z"),
       stage: "Group Stage (Group K)",
     },
     {
       homeTeam: "Uzbekistan",
-      awayTeam: "DR Congo",
+      awayTeam: "Colombia",
       kickoffTime: new Date("2026-06-17T22:00:00.000Z"),
       stage: "Group Stage (Group K)",
     },
@@ -429,12 +429,12 @@ async function main() {
     },
     {
       homeTeam: "Portugal",
-      awayTeam: "DR Congo",
+      awayTeam: "Colombia",
       kickoffTime: new Date("2026-06-27T19:30:00.000Z"),
       stage: "Group Stage (Group K)",
     },
     {
-      homeTeam: "Colombia",
+      homeTeam: "DR Congo",
       awayTeam: "Uzbekistan",
       kickoffTime: new Date("2026-06-27T19:30:00.000Z"),
       stage: "Group Stage (Group K)",
