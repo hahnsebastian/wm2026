@@ -508,7 +508,7 @@ export default function Home() {
                 </div>
 
                 {/* Standings Table */}
-                <div className="lg:col-span-2 border border-border-custom rounded-lg bg-card overflow-hidden">
+                <div className="lg:col-span-3 border border-border-custom rounded-lg bg-card overflow-hidden">
                   <div className="px-6 py-4 border-b border-border-custom flex justify-between items-center bg-neutral-50 dark:bg-neutral-900/50">
                     <h2 className="font-mono text-sm font-bold uppercase tracking-wider">
                       Current Rankings
