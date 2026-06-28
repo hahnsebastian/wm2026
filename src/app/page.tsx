@@ -43,6 +43,7 @@ interface Fixture {
   stage: string;
   homeGoals: number | null;
   awayGoals: number | null;
+  advancingTeam: string | null;
   isFinished: boolean;
 }
 
@@ -53,6 +54,7 @@ interface Prediction {
   fixtureId: string;
   homeBet: number | null;
   awayBet: number | null;
+  advancingTeam: string | null;
   pointsEarned: number | null;
   isMasked: boolean;
 }
@@ -86,11 +88,11 @@ export default function Home() {
   const [expandedMatches, setExpandedMatches] = useState<Record<string, boolean>>({});
 
   // Form inputs for predictions
-  const [betInputs, setBetInputs] = useState<Record<string, { home: string; away: string }>>({});
+  const [betInputs, setBetInputs] = useState<Record<string, { home: string; away: string; advancingTeam: string }>>({});
   const [betSavings, setBetSavings] = useState<Record<string, "idle" | "saving" | "saved" | "error">>({});
 
   // Form inputs for admin results
-  const [adminInputs, setAdminInputs] = useState<Record<string, { home: string; away: string; isFinished: boolean }>>({});
+  const [adminInputs, setAdminInputs] = useState<Record<string, { home: string; away: string; isFinished: boolean; advancingTeam: string }>>({});
   const [adminSavings, setAdminSavings] = useState<Record<string, "idle" | "saving" | "saved" | "error">>({});
 
   // Load Theme Preference on Mount
@@ -160,12 +162,13 @@ export default function Home() {
         setFixtures(sortedFixtures);
 
         // Prepopulate Admin inputs
-        const initialAdminInputs: Record<string, { home: string; away: string; isFinished: boolean }> = {};
+        const initialAdminInputs: Record<string, { home: string; away: string; isFinished: boolean; advancingTeam: string }> = {};
         fixturesData.forEach((fix: Fixture) => {
           initialAdminInputs[fix.id] = {
             home: fix.homeGoals !== null ? fix.homeGoals.toString() : "",
             away: fix.awayGoals !== null ? fix.awayGoals.toString() : "",
             isFinished: fix.isFinished,
+            advancingTeam: fix.advancingTeam || "",
           };
         });
         setAdminInputs(initialAdminInputs);
@@ -202,12 +205,13 @@ export default function Home() {
 
           // Prepopulate Bet inputs for predictions if we are on a member's tab
           if (viewerName) {
-            const initialBets: Record<string, { home: string; away: string }> = {};
+            const initialBets: Record<string, { home: string; away: string; advancingTeam: string }> = {};
             predictionsData.forEach((pred: Prediction) => {
               if (pred.userName.toLowerCase() === viewerName.toLowerCase()) {
                 initialBets[pred.fixtureId] = {
                   home: pred.homeBet !== null ? pred.homeBet.toString() : "",
                   away: pred.awayBet !== null ? pred.awayBet.toString() : "",
+                  advancingTeam: pred.advancingTeam || "",
                 };
               }
             });
@@ -241,6 +245,7 @@ export default function Home() {
           fixtureId,
           homeBet: parseInt(inputs.home),
           awayBet: parseInt(inputs.away),
+          advancingTeam: inputs.advancingTeam,
         }),
       });
 
@@ -289,6 +294,7 @@ export default function Home() {
           homeGoals: home !== "" ? parseInt(home) : null,
           awayGoals: away !== "" ? parseInt(away) : null,
           isFinished,
+          advancingTeam: inputs.advancingTeam,
         }),
       });
 
@@ -650,8 +656,9 @@ export default function Home() {
                         (p) => p.userName.toLowerCase() === activeTab.toLowerCase() && p.fixtureId === fix.id
                       );
                       
-                      const inputState = betInputs[fix.id] || { home: "", away: "" };
+                      const inputState = betInputs[fix.id] || { home: "", away: "", advancingTeam: "" };
                       const savingStatus = betSavings[fix.id] || "idle";
+                      const isKnockout = fix.stage.includes("Round of 16");
 
                       return (
                         <div 
@@ -739,9 +746,49 @@ export default function Home() {
                                   />
                                 </div>
                               )}
+                              )}
 
                               <span className="font-bold text-left w-20 sm:w-24 md:w-32 truncate">{fix.awayTeam}</span>
                             </div>
+
+                            {/* Advancing Team Selection for Knockouts */}
+                            {isKnockout && (
+                              <div className="flex flex-col items-center mt-2 sm:mt-0 px-2">
+                                <span className="text-[10px] text-neutral-400 font-mono uppercase mb-1">Advances</span>
+                                {locked ? (
+                                  <div className="text-xs font-bold text-white bg-white/10 px-2 py-0.5 rounded">
+                                    {savedPrediction?.advancingTeam || "None"}
+                                  </div>
+                                ) : (
+                                  <div className="flex items-center gap-2 text-xs font-mono">
+                                    <label className="flex items-center gap-1 cursor-pointer">
+                                      <input 
+                                        type="radio" 
+                                        name={`advance-${fix.id}`} 
+                                        value={fix.homeTeam}
+                                        checked={inputState.advancingTeam === fix.homeTeam}
+                                        onChange={(e) => {
+                                          setBetInputs(prev => ({ ...prev, [fix.id]: { ...inputState, advancingTeam: e.target.value } }));
+                                        }}
+                                      />
+                                      <span className="truncate w-12">{fix.homeTeam.substring(0, 3).toUpperCase()}</span>
+                                    </label>
+                                    <label className="flex items-center gap-1 cursor-pointer">
+                                      <input 
+                                        type="radio" 
+                                        name={`advance-${fix.id}`} 
+                                        value={fix.awayTeam}
+                                        checked={inputState.advancingTeam === fix.awayTeam}
+                                        onChange={(e) => {
+                                          setBetInputs(prev => ({ ...prev, [fix.id]: { ...inputState, advancingTeam: e.target.value } }));
+                                        }}
+                                      />
+                                      <span className="truncate w-12">{fix.awayTeam.substring(0, 3).toUpperCase()}</span>
+                                    </label>
+                                  </div>
+                                )}
+                              </div>
+                            )}
 
                             {/* Actions / points status */}
                             <div className="w-full sm:w-24 text-center sm:text-right mt-2 sm:mt-0">
@@ -907,8 +954,15 @@ export default function Home() {
                                               <Lock className="w-3 h-3 text-neutral-400" /> Masked
                                             </div>
                                           ) : (
-                                            <div className="px-2.5 py-1 border border-border-custom bg-neutral-100 dark:bg-neutral-900 rounded font-bold text-sm">
-                                              {pred.homeBet}-{pred.awayBet}
+                                            <div className="flex flex-col items-end gap-1">
+                                              <div className="px-2.5 py-1 border border-border-custom bg-neutral-100 dark:bg-neutral-900 rounded font-bold text-sm">
+                                                {pred.homeBet}-{pred.awayBet}
+                                              </div>
+                                              {fix.stage === "Round of 16" && pred.advancingTeam && (
+                                                <div className="text-[9px] text-neutral-500 uppercase">
+                                                  Adv: {pred.advancingTeam.substring(0, 3)}
+                                                </div>
+                                              )}
                                             </div>
                                           )}
                                         </div>
@@ -1042,6 +1096,41 @@ export default function Home() {
                                   <label className="text-[10px] font-mono text-neutral-400 uppercase ml-1">{fix.awayTeam}</label>
                                 </div>
                               </div>
+
+                              {/* Advancing Team Selection for Admin (Knockouts) */}
+                              {fix.stage.includes("Round of 16") && (
+                                <div className="flex flex-col items-center px-2">
+                                  <span className="text-[10px] text-neutral-400 font-mono uppercase mb-1">Advances</span>
+                                  <div className="flex items-center gap-2 text-xs font-mono">
+                                    <label className="flex items-center gap-1 cursor-pointer">
+                                      <input 
+                                        type="radio" 
+                                        name={`admin-advance-${fix.id}`} 
+                                        value={fix.homeTeam}
+                                        checked={inputs.advancingTeam === fix.homeTeam}
+                                        disabled={!isAdminUnlocked}
+                                        onChange={(e) => {
+                                          setAdminInputs(prev => ({ ...prev, [fix.id]: { ...inputs, advancingTeam: e.target.value } }));
+                                        }}
+                                      />
+                                      <span className="truncate w-12">{fix.homeTeam.substring(0, 3).toUpperCase()}</span>
+                                    </label>
+                                    <label className="flex items-center gap-1 cursor-pointer">
+                                      <input 
+                                        type="radio" 
+                                        name={`admin-advance-${fix.id}`} 
+                                        value={fix.awayTeam}
+                                        checked={inputs.advancingTeam === fix.awayTeam}
+                                        disabled={!isAdminUnlocked}
+                                        onChange={(e) => {
+                                          setAdminInputs(prev => ({ ...prev, [fix.id]: { ...inputs, advancingTeam: e.target.value } }));
+                                        }}
+                                      />
+                                      <span className="truncate w-12">{fix.awayTeam.substring(0, 3).toUpperCase()}</span>
+                                    </label>
+                                  </div>
+                                </div>
+                              )}
 
                               {/* Checkbox Status */}
                               <label className="flex items-center gap-2 cursor-pointer font-mono text-xs select-none">

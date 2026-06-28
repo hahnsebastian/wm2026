@@ -22,7 +22,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Unauthorized. Invalid Admin PIN." }, { status: 403 });
     }
 
-    const { fixtureId, homeGoals, awayGoals, isFinished } = await request.json();
+    const { fixtureId, homeGoals, awayGoals, isFinished, advancingTeam } = await request.json();
 
     if (!fixtureId) {
       return NextResponse.json({ error: "Missing fixture ID" }, { status: 400 });
@@ -37,6 +37,7 @@ export async function POST(request: Request) {
         homeGoals: hasScore ? Number(homeGoals) : null,
         awayGoals: hasScore ? Number(awayGoals) : null,
         isFinished: !!isFinished,
+        advancingTeam: advancingTeam || null,
       },
     });
 

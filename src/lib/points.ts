@@ -13,29 +13,49 @@ export function calculatePoints(
   homeBet: number,
   awayBet: number,
   homeGoals: number,
-  awayGoals: number
+  awayGoals: number,
+  betAdvancingTeam?: string | null,
+  actualAdvancingTeam?: string | null,
+  stage?: string | null
 ): number {
+  let basePoints = 0;
+
   if (homeBet === homeGoals && awayBet === awayGoals) {
-    return 4; // Exact Score Match
-  }
+    basePoints = 4; // Exact Score Match
+  } else {
+    const betDiff = homeBet - awayBet;
+    const actualDiff = homeGoals - awayGoals;
 
-  const betDiff = homeBet - awayBet;
-  const actualDiff = homeGoals - awayGoals;
+    // Verify if same outcome (Home Win, Away Win, or Draw)
+    const sameOutcome =
+      (homeBet > awayBet && homeGoals > awayGoals) || // Home win
+      (awayBet > homeBet && awayGoals > homeGoals) || // Away win
+      (homeBet === awayBet && homeGoals === awayGoals); // Draw
 
-  // Verify if same outcome (Home Win, Away Win, or Draw)
-  const sameOutcome =
-    (homeBet > awayBet && homeGoals > awayGoals) || // Home win
-    (awayBet > homeBet && awayGoals > homeGoals) || // Away win
-    (homeBet === awayBet && homeGoals === awayGoals); // Draw
-
-  if (sameOutcome) {
-    if (betDiff === actualDiff) {
-      return 2; // Correct Goal Difference or Draw Margin
+    if (sameOutcome) {
+      if (betDiff === actualDiff) {
+        basePoints = 2; // Correct Goal Difference or Draw Margin
+      } else {
+        basePoints = 1; // Correct Outcome Tendency
+      }
     }
-    return 1; // Correct Outcome Tendency
   }
 
-  return 0; // Wrong Outcome
+  // Multiplier logic
+  let multiplier = 1;
+  if (stage && stage.includes("Round of 16")) {
+    multiplier = 2;
+  }
+
+  let totalPoints = basePoints * multiplier;
+
+  // Advancing Team Bonus (also multiplied)
+  if (betAdvancingTeam && actualAdvancingTeam && betAdvancingTeam === actualAdvancingTeam) {
+    // Base 2 points for guessing who advances correctly, multiplied
+    totalPoints += (2 * multiplier); 
+  }
+
+  return totalPoints;
 }
 
 /**
@@ -64,7 +84,10 @@ export async function recalculateAllUserPoints() {
         pred.homeBet,
         pred.awayBet,
         fixture.homeGoals,
-        fixture.awayGoals
+        fixture.awayGoals,
+        pred.advancingTeam,
+        fixture.advancingTeam,
+        fixture.stage
       );
 
       if (pred.pointsEarned !== pts) {

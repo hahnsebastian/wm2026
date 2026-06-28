@@ -36,6 +36,7 @@ export async function GET(request: Request) {
           fixtureId: pred.fixtureId,
           homeBet: pred.homeBet,
           awayBet: pred.awayBet,
+          advancingTeam: pred.advancingTeam,
           pointsEarned: pred.pointsEarned,
           isMasked: false,
         };
@@ -47,6 +48,7 @@ export async function GET(request: Request) {
           fixtureId: pred.fixtureId,
           homeBet: null,
           awayBet: null,
+          advancingTeam: null,
           pointsEarned: null,
           isMasked: true,
         };
@@ -62,7 +64,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   try {
-    const { userName, fixtureId, homeBet, awayBet } = await request.json();
+    const { userName, fixtureId, homeBet, awayBet, advancingTeam } = await request.json();
 
     if (!userName || !fixtureId || homeBet === undefined || awayBet === undefined) {
       return NextResponse.json({ error: "Missing required prediction fields" }, { status: 400 });
@@ -100,12 +102,14 @@ export async function POST(request: Request) {
       update: {
         homeBet: Number(homeBet),
         awayBet: Number(awayBet),
+        advancingTeam: advancingTeam || null,
       },
       create: {
         userId: user.id,
         fixtureId,
         homeBet: Number(homeBet),
         awayBet: Number(awayBet),
+        advancingTeam: advancingTeam || null,
       },
     });
 

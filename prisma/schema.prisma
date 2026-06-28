@@ -25,6 +25,7 @@ model Fixture {
   stage              String
   homeGoals          Int?
   awayGoals          Int?
+  advancingTeam      String?
   isFinished         Boolean             @default(false)
   predictions        Prediction[]
   historicPointsLogs HistoricPointsLog[]
@@ -36,6 +37,7 @@ model Prediction {
   fixtureId    String
   homeBet      Int
   awayBet      Int
+  advancingTeam String?
   pointsEarned Int?
   user         User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   fixture      Fixture @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
