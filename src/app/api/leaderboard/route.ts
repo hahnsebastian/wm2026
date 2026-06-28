@@ -24,13 +24,54 @@ export async function GET() {
     const userStats = users.map((user) => {
       const userPreds = allPredictions.filter((p) => p.userId === user.id);
       const totalPoints = userPreds.reduce((sum, p) => sum + (p.pointsEarned ?? 0), 0);
-      const exactCount = userPreds.filter((p) => p.pointsEarned === 4).length;
+      const exactCount = userPreds.filter((p) => p.pointsEarned === 4 || p.pointsEarned === 6 || p.pointsEarned === 8).length;
+      const diffCount = userPreds.filter((p) => p.pointsEarned === 2 || p.pointsEarned === 4).length - userPreds.filter((p) => p.pointsEarned === 4 || p.pointsEarned === 6 || p.pointsEarned === 8).length;
+
+      // For more accurate breakdown, classify by checking against fixture results
+      let exactMatches = 0;
+      let diffMatches = 0;
+      let outcomeMatches = 0;
+      let wrongMatches = 0;
+
+      for (const pred of userPreds) {
+        const fix = finishedFixtures.find(f => f.id === pred.fixtureId);
+        if (!fix || fix.homeGoals === null || fix.awayGoals === null) continue;
+
+        const homeBet = pred.homeBet;
+        const awayBet = pred.awayBet;
+        const homeGoals = fix.homeGoals;
+        const awayGoals = fix.awayGoals;
+
+        if (homeBet === homeGoals && awayBet === awayGoals) {
+          exactMatches++;
+        } else {
+          const betDiff = homeBet - awayBet;
+          const actualDiff = homeGoals - awayGoals;
+          const sameOutcome =
+            (homeBet > awayBet && homeGoals > awayGoals) ||
+            (awayBet > homeBet && awayGoals > homeGoals) ||
+            (homeBet === awayBet && homeGoals === awayGoals);
+
+          if (sameOutcome) {
+            if (betDiff === actualDiff) {
+              diffMatches++;
+            } else {
+              outcomeMatches++;
+            }
+          } else {
+            wrongMatches++;
+          }
+        }
+      }
 
       return {
         id: user.id,
         name: user.name,
         totalPoints,
-        exactMatchesCount: exactCount,
+        exactMatchesCount: exactMatches,
+        diffMatchesCount: diffMatches,
+        outcomeMatchesCount: outcomeMatches,
+        wrongMatchesCount: wrongMatches,
         predictions: userPreds,
       };
     });
@@ -105,6 +146,9 @@ export async function GET() {
         name: u.name,
         totalPoints: u.totalPoints,
         exactMatchesCount: u.exactMatchesCount,
+        diffMatchesCount: u.diffMatchesCount,
+        outcomeMatchesCount: u.outcomeMatchesCount,
+        wrongMatchesCount: u.wrongMatchesCount,
         rank: currentRank,
         trend,
       };

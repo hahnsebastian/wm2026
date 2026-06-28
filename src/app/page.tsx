@@ -23,7 +23,10 @@ import {
   YAxis, 
   CartesianGrid, 
   Tooltip, 
-  Legend 
+  Legend,
+  PieChart,
+  Pie,
+  Cell
 } from "recharts";
 
 interface Standing {
@@ -31,6 +34,9 @@ interface Standing {
   name: string;
   totalPoints: number;
   exactMatchesCount: number;
+  diffMatchesCount: number;
+  outcomeMatchesCount: number;
+  wrongMatchesCount: number;
   rank: number;
   trend: "up" | "down" | "stable";
 }
@@ -572,69 +578,146 @@ export default function Home() {
                     </table>
                   </div>
                 </div>
+              </div>
 
-                {/* Standings Evolution Component */}
-                <div className="border border-border-custom rounded-lg bg-card p-6 flex flex-col space-y-4">
-                  <div className="space-y-1">
-                    <h2 className="font-mono text-sm font-bold uppercase tracking-wider">
-                      Standings Evolution
-                    </h2>
-                    <p className="text-xs text-neutral-400">
-                      Chronological cumulative points timeline match-by-match.
-                    </p>
+              {/* STANDINGS EVOLUTION - Full Width Below Table */}
+              <div className="border border-border-custom rounded-lg bg-card p-6 flex flex-col space-y-4">
+                <div className="space-y-1">
+                  <h2 className="font-mono text-sm font-bold uppercase tracking-wider">
+                    Standings Evolution
+                  </h2>
+                  <p className="text-xs text-neutral-400">
+                    Chronological cumulative points timeline match-by-match.
+                  </p>
+                </div>
+
+                <div className="flex-1 flex items-center justify-center">
+                  {chartData.length <= 1 ? (
+                    <div className="text-center p-6 border border-dashed border-border-custom rounded font-mono text-xs text-neutral-400 uppercase w-full">
+                      Need at least 1 finished match to plot standings history
+                    </div>
+                  ) : mounted ? (
+                    <div className="w-full h-[500px] text-xs font-mono">
+                      <ResponsiveContainer width="100%" height="100%">
+                        <LineChart
+                          data={chartData}
+                          margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                        >
+                          <CartesianGrid strokeDasharray="3 3" stroke={theme === "dark" ? "#222" : "#eee"} />
+                          <XAxis 
+                            dataKey="name" 
+                            stroke={theme === "dark" ? "#888" : "#222"} 
+                            tickLine={false}
+                            axisLine={false}
+                            dy={10}
+                          />
+                          <YAxis 
+                            stroke={theme === "dark" ? "#888" : "#222"} 
+                            tickLine={false}
+                            axisLine={false}
+                            dx={-10}
+                          />
+                          <Tooltip 
+                            contentStyle={{ 
+                              backgroundColor: theme === "dark" ? "#121212" : "#ffffff", 
+                              borderColor: theme === "dark" ? "#262626" : "#e5e5e5",
+                              color: theme === "dark" ? "#f5f5f5" : "#0a0a0a"
+                            }}
+                          />
+                          <Legend wrapperStyle={{ paddingTop: 20 }} />
+                          {usersList.map((user, index) => (
+                            <Line
+                              key={user}
+                              type="monotone"
+                              dataKey={user}
+                              stroke={getPlayerColor(user, index)}
+                              strokeWidth={user === activeTab ? 3.5 : 2}
+                              strokeOpacity={user === activeTab ? 1 : 0.85}
+                              activeDot={{ r: 6, strokeWidth: 0 }}
+                              dot={false}
+                            />
+                          ))}
+                        </LineChart>
+                      </ResponsiveContainer>
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+
+              {/* PREDICTION OUTCOME BREAKDOWN - Pie Charts */}
+              <div className="border border-border-custom rounded-lg bg-card p-6 flex flex-col space-y-4">
+                <div className="space-y-1">
+                  <h2 className="font-mono text-sm font-bold uppercase tracking-wider">
+                    Prediction Breakdown
+                  </h2>
+                  <p className="text-xs text-neutral-400">
+                    Distribution of prediction outcomes per player.
+                  </p>
+                </div>
+
+                {standings.length === 0 ? (
+                  <div className="text-center p-6 border border-dashed border-border-custom rounded font-mono text-xs text-neutral-400 uppercase w-full">
+                    No matches finished yet.
                   </div>
+                ) : mounted ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    {standings.map((player) => {
+                      const total = player.exactMatchesCount + player.diffMatchesCount + player.outcomeMatchesCount + player.wrongMatchesCount;
+                      if (total === 0) return null;
+                      const pieData = [
+                        { name: "Exact", value: player.exactMatchesCount, color: "#22c55e" },
+                        { name: "Diff", value: player.diffMatchesCount, color: "#eab308" },
+                        { name: "Outcome", value: player.outcomeMatchesCount, color: "#3b82f6" },
+                        { name: "Wrong", value: player.wrongMatchesCount, color: "#ef4444" },
+                      ].filter(d => d.value > 0);
 
-                  <div className="flex-1 min-h-[300px] flex items-center justify-center">
-                    {chartData.length <= 1 ? (
-                      <div className="text-center p-6 border border-dashed border-border-custom rounded font-mono text-xs text-neutral-400 uppercase w-full">
-                        Need at least 1 finished match to plot standings history
-                      </div>
-                    ) : mounted ? (
-                      <div className="w-full h-[300px] text-xs font-mono">
-                        <ResponsiveContainer width="100%" height="100%">
-                          <LineChart
-                            data={chartData}
-                            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-                          >
-                            <CartesianGrid strokeDasharray="3 3" stroke={theme === "dark" ? "#222" : "#eee"} />
-                            <XAxis 
-                              dataKey="name" 
-                              stroke={theme === "dark" ? "#888" : "#222"} 
-                              tickLine={false}
-                              axisLine={false}
-                              dy={10}
-                            />
-                            <YAxis 
-                              stroke={theme === "dark" ? "#888" : "#222"} 
-                              tickLine={false}
-                              axisLine={false}
-                              dx={-10}
-                            />
-                            <Tooltip 
-                              contentStyle={{ 
-                                backgroundColor: theme === "dark" ? "#121212" : "#ffffff", 
-                                borderColor: theme === "dark" ? "#262626" : "#e5e5e5",
-                                color: theme === "dark" ? "#f5f5f5" : "#0a0a0a"
-                              }}
-                            />
-                            <Legend wrapperStyle={{ paddingTop: 20 }} />
-                            {usersList.map((user, index) => (
-                              <Line
-                                key={user}
-                                type="monotone"
-                                dataKey={user}
-                                stroke={getPlayerColor(user, index)}
-                                strokeWidth={user === activeTab ? 3.5 : 2}
-                                strokeOpacity={user === activeTab ? 1 : 0.85}
-                                activeDot={{ r: 6, strokeWidth: 0 }}
-                                dot={false}
+                      return (
+                        <div key={player.userId} className="flex flex-col items-center gap-1">
+                          <span className="font-mono text-xs font-bold uppercase truncate">{player.name}</span>
+                          <ResponsiveContainer width="100%" height={120}>
+                            <PieChart>
+                              <Pie
+                                data={pieData}
+                                cx="50%"
+                                cy="50%"
+                                innerRadius={25}
+                                outerRadius={45}
+                                paddingAngle={3}
+                                dataKey="value"
+                                strokeWidth={0}
+                              >
+                                {pieData.map((entry, idx) => (
+                                  <Cell key={idx} fill={entry.color} />
+                                ))}
+                              </Pie>
+                              <Tooltip
+                                contentStyle={{ 
+                                  backgroundColor: theme === "dark" ? "#121212" : "#ffffff", 
+                                  borderColor: theme === "dark" ? "#262626" : "#e5e5e5",
+                                  color: theme === "dark" ? "#f5f5f5" : "#0a0a0a",
+                                  fontSize: "10px",
+                                }}
                               />
-                            ))}
-                          </LineChart>
-                        </ResponsiveContainer>
-                      </div>
-                    ) : null}
+                            </PieChart>
+                          </ResponsiveContainer>
+                          <div className="flex flex-wrap justify-center gap-x-2 gap-y-0.5 text-[9px] font-mono text-neutral-400">
+                            <span className="text-emerald-500">{player.exactMatchesCount}E</span>
+                            <span className="text-yellow-500">{player.diffMatchesCount}D</span>
+                            <span className="text-blue-500">{player.outcomeMatchesCount}O</span>
+                            <span className="text-red-500">{player.wrongMatchesCount}W</span>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
+                ) : null}
+
+                {/* Legend */}
+                <div className="flex flex-wrap justify-center gap-4 text-[10px] font-mono text-neutral-400 uppercase pt-2 border-t border-border-custom">
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block" /> Exact Score</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-yellow-500 inline-block" /> Goal Diff.</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-blue-500 inline-block" /> Outcome</span>
+                  <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-red-500 inline-block" /> Wrong</span>
                 </div>
               </div>
             )}
