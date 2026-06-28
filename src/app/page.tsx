@@ -491,11 +491,11 @@ export default function Home() {
                   {/* Knockout Round Points */}
                   <div className="flex flex-col md:flex-row items-center justify-between p-3 border border-amber-500/30 rounded bg-amber-500/10">
                     <div className="flex items-center gap-2 mb-2 md:mb-0">
-                      <span className="font-bold text-amber-500 text-sm uppercase">Round of 16 (2x Multiplier)</span>
+                      <span className="font-bold text-amber-500 text-sm uppercase">Round of 16</span>
                     </div>
                     <span className="text-center md:text-right text-neutral-500 uppercase">
-                      Exact <strong className="text-amber-500">8pts</strong> • Diff <strong className="text-amber-500">4pts</strong> • Outcome <strong className="text-amber-500">2pts</strong> <br/>
-                      + Guessing Advancing Team: <strong className="text-amber-500">+4pts</strong>
+                      Exact <strong className="text-amber-500">6pts</strong> • Diff <strong className="text-amber-500">4pts</strong> • Outcome <strong className="text-amber-500">2pts</strong> <br/>
+                      + Guessing Advancing Team: <strong className="text-amber-500">+2pts</strong>
                     </span>
                   </div>
                 </div>

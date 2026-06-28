@@ -41,18 +41,23 @@ export function calculatePoints(
     }
   }
 
-  // Multiplier logic
-  let multiplier = 1;
+  // Multiplier / Stage logic
+  let totalPoints = basePoints;
+
   if (stage && stage.includes("Round of 16")) {
-    multiplier = 2;
+    if (basePoints === 4) {
+      totalPoints = 6; // Exact match is 6 points
+    } else if (basePoints === 2) {
+      totalPoints = 4; // Diff is 4 points
+    } else if (basePoints === 1) {
+      totalPoints = 2; // Tendency is 2 points
+    }
   }
 
-  let totalPoints = basePoints * multiplier;
-
-  // Advancing Team Bonus (also multiplied)
+  // Advancing Team Bonus
   if (betAdvancingTeam && actualAdvancingTeam && betAdvancingTeam === actualAdvancingTeam) {
-    // Base 2 points for guessing who advances correctly, multiplied
-    totalPoints += (2 * multiplier); 
+    // Flat 2 bonus points for guessing who advances correctly
+    totalPoints += 2; 
   }
 
   return totalPoints;
