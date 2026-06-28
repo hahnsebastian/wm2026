@@ -472,6 +472,7 @@ export default function Home() {
           <>
             {/* LEADERBOARD VIEW */}
             {activeTab === "leaderboard" && (
+              <>
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Rules Summary */}
                 <div className="lg:col-span-3 space-y-4 p-4 border border-border-custom rounded-lg bg-card text-xs font-mono">
@@ -720,6 +721,7 @@ export default function Home() {
                   <span className="flex items-center gap-1"><span className="w-2.5 h-2.5 rounded-full bg-red-500 inline-block" /> Wrong</span>
                 </div>
               </div>
+              </>
             )}
 
             {/* MEMBER INDIVIDUAL TAB BETS VIEW */}
