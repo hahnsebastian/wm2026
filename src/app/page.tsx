@@ -468,22 +468,35 @@ export default function Home() {
             {activeTab === "leaderboard" && (
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Rules Summary */}
-                <div className="lg:col-span-3 grid grid-cols-1 md:grid-cols-4 gap-4 p-4 border border-border-custom rounded-lg bg-card text-xs font-mono">
-                  <div className="flex flex-col items-center justify-center p-3 border border-border-custom rounded bg-neutral-50 dark:bg-neutral-900/50">
-                    <span className="font-bold text-emerald-500 text-lg mb-1">4 Points</span>
-                    <span className="text-center text-neutral-500 uppercase">Exact Score Match<br/>(e.g. bet 2-1, result 2-1)</span>
+                <div className="lg:col-span-3 space-y-4 p-4 border border-border-custom rounded-lg bg-card text-xs font-mono">
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div className="flex flex-col items-center justify-center p-3 border border-border-custom rounded bg-neutral-50 dark:bg-neutral-900/50">
+                      <span className="font-bold text-emerald-500 text-lg mb-1">4 Points</span>
+                      <span className="text-center text-neutral-500 uppercase">Exact Score Match<br/>(e.g. bet 2-1, result 2-1)</span>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-3 border border-border-custom rounded bg-neutral-50 dark:bg-neutral-900/50">
+                      <span className="font-bold text-emerald-500 text-lg mb-1">2 Points</span>
+                      <span className="text-center text-neutral-500 uppercase">Correct Goal Diff.<br/>(e.g. bet 3-1, result 2-0)</span>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-3 border border-border-custom rounded bg-neutral-50 dark:bg-neutral-900/50">
+                      <span className="font-bold text-emerald-500 text-lg mb-1">1 Point</span>
+                      <span className="text-center text-neutral-500 uppercase">Correct Outcome<br/>(e.g. bet 2-0, result 1-0)</span>
+                    </div>
+                    <div className="flex flex-col items-center justify-center p-3 border border-border-custom rounded bg-neutral-50 dark:bg-neutral-900/50">
+                      <span className="font-bold text-red-500 text-lg mb-1">0 Points</span>
+                      <span className="text-center text-neutral-500 uppercase">Wrong Outcome<br/>(e.g. bet 2-1, result 0-1)</span>
+                    </div>
                   </div>
-                  <div className="flex flex-col items-center justify-center p-3 border border-border-custom rounded bg-neutral-50 dark:bg-neutral-900/50">
-                    <span className="font-bold text-emerald-500 text-lg mb-1">2 Points</span>
-                    <span className="text-center text-neutral-500 uppercase">Correct Goal Diff.<br/>(e.g. bet 3-1, result 2-0)</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center p-3 border border-border-custom rounded bg-neutral-50 dark:bg-neutral-900/50">
-                    <span className="font-bold text-emerald-500 text-lg mb-1">1 Point</span>
-                    <span className="text-center text-neutral-500 uppercase">Correct Outcome<br/>(e.g. bet 2-0, result 1-0)</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center p-3 border border-border-custom rounded bg-neutral-50 dark:bg-neutral-900/50">
-                    <span className="font-bold text-red-500 text-lg mb-1">0 Points</span>
-                    <span className="text-center text-neutral-500 uppercase">Wrong Outcome<br/>(e.g. bet 2-1, result 0-1)</span>
+                  
+                  {/* Knockout Round Points */}
+                  <div className="flex flex-col md:flex-row items-center justify-between p-3 border border-amber-500/30 rounded bg-amber-500/10">
+                    <div className="flex items-center gap-2 mb-2 md:mb-0">
+                      <span className="font-bold text-amber-500 text-sm uppercase">Round of 16 (2x Multiplier)</span>
+                    </div>
+                    <span className="text-center md:text-right text-neutral-500 uppercase">
+                      Exact <strong className="text-amber-500">8pts</strong> • Diff <strong className="text-amber-500">4pts</strong> • Outcome <strong className="text-amber-500">2pts</strong> <br/>
+                      + Guessing Advancing Team: <strong className="text-amber-500">+4pts</strong>
+                    </span>
                   </div>
                 </div>
 
@@ -687,10 +700,7 @@ export default function Home() {
                                 </span>
                               )}
                             </div>
-                            <div className="font-mono text-xs text-neutral-400">
-                              Kickoff: {formatKickoff(fix.kickoffTime)}
                             </div>
-                          </div>
 
                           {/* Scores & Inputs */}
                           <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 w-full md:w-auto justify-between md:justify-end mt-4 md:mt-0">
@@ -745,7 +755,6 @@ export default function Home() {
                                     }}
                                   />
                                 </div>
-                              )}
                               )}
 
                               <span className="font-bold text-left w-20 sm:w-24 md:w-32 truncate">{fix.awayTeam}</span>
@@ -1047,10 +1056,7 @@ export default function Home() {
                               <div className="font-mono text-sm font-bold">
                                 {fix.homeTeam} vs {fix.awayTeam}
                               </div>
-                              <div className="font-mono text-xs text-neutral-400">
-                                Kickoff: {formatKickoff(fix.kickoffTime)}
                               </div>
-                            </div>
 
                             {/* Inputs and actions */}
                             <div className="flex flex-wrap items-center gap-6 w-full lg:w-auto justify-between lg:justify-end">
