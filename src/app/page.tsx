@@ -857,24 +857,22 @@ export default function Home() {
                                   <div className="flex items-center gap-2 text-xs font-mono">
                                     <label className="flex items-center gap-1 cursor-pointer">
                                       <input 
-                                        type="radio" 
-                                        name={`advance-${fix.id}`} 
-                                        value={fix.homeTeam}
+                                        type="checkbox" 
+                                        className="w-4 h-4 rounded border-border-custom bg-transparent text-neutral-900 focus:ring-0 focus:ring-offset-0"
                                         checked={inputState.advancingTeam === fix.homeTeam}
-                                        onChange={(e) => {
-                                          setBetInputs(prev => ({ ...prev, [fix.id]: { ...inputState, advancingTeam: e.target.value } }));
+                                        onChange={() => {
+                                          setBetInputs(prev => ({ ...prev, [fix.id]: { ...inputState, advancingTeam: inputState.advancingTeam === fix.homeTeam ? "" : fix.homeTeam } }));
                                         }}
                                       />
                                       <span className="truncate w-12">{fix.homeTeam.substring(0, 3).toUpperCase()}</span>
                                     </label>
                                     <label className="flex items-center gap-1 cursor-pointer">
                                       <input 
-                                        type="radio" 
-                                        name={`advance-${fix.id}`} 
-                                        value={fix.awayTeam}
+                                        type="checkbox" 
+                                        className="w-4 h-4 rounded border-border-custom bg-transparent text-neutral-900 focus:ring-0 focus:ring-offset-0"
                                         checked={inputState.advancingTeam === fix.awayTeam}
-                                        onChange={(e) => {
-                                          setBetInputs(prev => ({ ...prev, [fix.id]: { ...inputState, advancingTeam: e.target.value } }));
+                                        onChange={() => {
+                                          setBetInputs(prev => ({ ...prev, [fix.id]: { ...inputState, advancingTeam: inputState.advancingTeam === fix.awayTeam ? "" : fix.awayTeam } }));
                                         }}
                                       />
                                       <span className="truncate w-12">{fix.awayTeam.substring(0, 3).toUpperCase()}</span>
@@ -1195,26 +1193,24 @@ export default function Home() {
                                   <div className="flex items-center gap-2 text-xs font-mono">
                                     <label className="flex items-center gap-1 cursor-pointer">
                                       <input 
-                                        type="radio" 
-                                        name={`admin-advance-${fix.id}`} 
-                                        value={fix.homeTeam}
+                                        type="checkbox" 
+                                        className="w-4 h-4 rounded border-border-custom bg-transparent text-neutral-900 focus:ring-0 focus:ring-offset-0"
                                         checked={inputs.advancingTeam === fix.homeTeam}
                                         disabled={!isAdminUnlocked}
-                                        onChange={(e) => {
-                                          setAdminInputs(prev => ({ ...prev, [fix.id]: { ...inputs, advancingTeam: e.target.value } }));
+                                        onChange={() => {
+                                          setAdminInputs(prev => ({ ...prev, [fix.id]: { ...inputs, advancingTeam: inputs.advancingTeam === fix.homeTeam ? "" : fix.homeTeam } }));
                                         }}
                                       />
                                       <span className="truncate w-12">{fix.homeTeam.substring(0, 3).toUpperCase()}</span>
                                     </label>
                                     <label className="flex items-center gap-1 cursor-pointer">
                                       <input 
-                                        type="radio" 
-                                        name={`admin-advance-${fix.id}`} 
-                                        value={fix.awayTeam}
+                                        type="checkbox" 
+                                        className="w-4 h-4 rounded border-border-custom bg-transparent text-neutral-900 focus:ring-0 focus:ring-offset-0"
                                         checked={inputs.advancingTeam === fix.awayTeam}
                                         disabled={!isAdminUnlocked}
-                                        onChange={(e) => {
-                                          setAdminInputs(prev => ({ ...prev, [fix.id]: { ...inputs, advancingTeam: e.target.value } }));
+                                        onChange={() => {
+                                          setAdminInputs(prev => ({ ...prev, [fix.id]: { ...inputs, advancingTeam: inputs.advancingTeam === fix.awayTeam ? "" : fix.awayTeam } }));
                                         }}
                                       />
                                       <span className="truncate w-12">{fix.awayTeam.substring(0, 3).toUpperCase()}</span>
