@@ -172,7 +172,7 @@ export async function GET() {
 
     for (let i = 0; i < finishedFixtures.length; i++) {
       const fix = finishedFixtures[i];
-      const matchLabel = `${fix.homeTeam} v ${fix.awayTeam}`;
+      const matchLabel = `M${i + 1}`;
       const dataPoint: any = { name: matchLabel };
 
       for (const user of users) {

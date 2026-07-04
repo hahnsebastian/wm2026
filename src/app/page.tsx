@@ -498,7 +498,7 @@ export default function Home() {
                   {/* Knockout Round Points */}
                   <div className="flex flex-col md:flex-row items-center justify-between p-3 border border-amber-500/30 rounded bg-amber-500/10">
                     <div className="flex items-center gap-2 mb-2 md:mb-0">
-                      <span className="font-bold text-amber-500 text-sm uppercase">Round of 16</span>
+                      <span className="font-bold text-amber-500 text-sm uppercase">Knockout Stage</span>
                     </div>
                     <span className="text-center md:text-right text-neutral-500 uppercase">
                       Exact <strong className="text-amber-500">6pts</strong> • Diff <strong className="text-amber-500">4pts</strong> • Outcome <strong className="text-amber-500">2pts</strong> <br/>
@@ -756,7 +756,7 @@ export default function Home() {
                       
                       const inputState = betInputs[fix.id] || { home: "", away: "", advancingTeam: "" };
                       const savingStatus = betSavings[fix.id] || "idle";
-                      const isKnockout = fix.stage.includes("Round of 16");
+                      const isKnockout = !fix.stage.includes("Group Stage");
 
                       return (
                         <div 
@@ -1052,7 +1052,7 @@ export default function Home() {
                                               <div className="px-2.5 py-1 border border-border-custom bg-neutral-100 dark:bg-neutral-900 rounded font-bold text-sm">
                                                 {pred.homeBet}-{pred.awayBet}
                                               </div>
-                                              {fix.stage === "Round of 16" && pred.advancingTeam && (
+                                               {!fix.stage.includes("Group Stage") && pred.advancingTeam && (
                                                 <div className="text-[9px] text-neutral-500 uppercase">
                                                   Adv: {pred.advancingTeam.substring(0, 3)}
                                                 </div>
@@ -1188,8 +1188,8 @@ export default function Home() {
                                 </div>
                               </div>
 
-                              {/* Advancing Team Selection for Admin (Knockouts) */}
-                              {fix.stage.includes("Round of 16") && (
+                               {/* Advancing Team Selection for Admin (Knockouts) */}
+                               {!fix.stage.includes("Group Stage") && (
                                 <div className="flex flex-col items-center px-2">
                                   <span className="text-[10px] text-neutral-400 font-mono uppercase mb-1">Advances</span>
                                   <div className="flex items-center gap-2 text-xs font-mono">

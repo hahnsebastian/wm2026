@@ -41,10 +41,9 @@ export function calculatePoints(
     }
   }
 
-  // Multiplier / Stage logic
   let totalPoints = basePoints;
 
-  if (stage && stage.includes("Round of 16")) {
+  if (stage && !stage.includes("Group Stage")) {
     if (basePoints === 4) {
       totalPoints = 6; // Exact match is 6 points
     } else if (basePoints === 2) {
